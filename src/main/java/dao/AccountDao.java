@@ -76,7 +76,6 @@ public class AccountDao {
 
     public static Account getAccount(int id) {
         Transaction transaction = null;
-        User user = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             Account account = session.get(Account.class, id);
@@ -117,11 +116,7 @@ public class AccountDao {
         List<Document> documents = new ArrayList<>();
         for (Document d : iterable) {
             documents.add(d);
-//            System.out.println(d);
-//            System.out.println(d.get("_id"));
-
         }
-
         return documents;
     }
 

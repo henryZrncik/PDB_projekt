@@ -19,22 +19,21 @@ import static com.mongodb.client.model.Updates.push;
 import static com.mongodb.client.model.Updates.set;
 
 public class OnlineTransactionDao {
-    public boolean synchronizationMongoTransaction(int transactionId, int sourceAccountId, int destinationAccountId, int sum, int newBalanceSource, int newBalanceDestination, String dateString){
-        System.out.println("dotiahol som to az na mongoTransaction");
+    public boolean synchronizationMongoTransaction(int transactionId, int sourceAccountId, int destinationAccountId, int sum, int newBalanceSource, int newBalanceDestination, String dateString) {
         MongoClient mongoClient = MongoUtil.getMongoClient();
         Document transactionOut = new Document("transactionId", transactionId)
                 .append("isIN", false)
                 .append("isTransaction", true)
                 .append("sum", sum)
                 .append("date", dateString)
-                .append("dateAggregateFormat",  Integer.parseInt( dateString.substring(0, 4) + dateString.substring(5, 7) ))
+                .append("dateAggregateFormat", Integer.parseInt(dateString.substring(0, 4) + dateString.substring(5, 7)))
                 .append("destinationAccountId", destinationAccountId);
         Document transactionIn = new Document("transactionId", transactionId)
                 .append("isIN", true)
                 .append("isTransaction", true)
                 .append("sum", sum)
                 .append("date", dateString)
-                .append("dateAggregateFormat",  Integer.parseInt( dateString.substring(0, 4) + dateString.substring(5, 7) ))
+                .append("dateAggregateFormat", Integer.parseInt(dateString.substring(0, 4) + dateString.substring(5, 7)))
                 .append("sourceAccountId", sourceAccountId);
 
         MongoCollection accountCollection = mongoClient.getDatabase("db1").getCollection("Accounts");
@@ -42,18 +41,17 @@ public class OnlineTransactionDao {
         Bson filterSource = eq("accountId", sourceAccountId);
         Bson updateOperationSource = set("balance", newBalanceSource);
         Bson updateOperationAddManipulation = push("accountManipulations", transactionOut);
-        UpdateResult updateResult1 = accountCollection.updateOne(filterSource,   updateOperationAddManipulation );
-        UpdateResult updateResult2 = accountCollection.updateOne(filterSource,  updateOperationSource );
+        UpdateResult updateResult1 = accountCollection.updateOne(filterSource, updateOperationAddManipulation);
+        UpdateResult updateResult2 = accountCollection.updateOne(filterSource, updateOperationSource);
 
         // Destination / In updated sum and add new transaction
         Bson filterDestination = eq("accountId", destinationAccountId);
         Bson updateOperationDestination = set("balance", newBalanceDestination);
         Bson updateOperationAddManipulation2 = push("accountManipulations", transactionIn);
-        UpdateResult updateResult3 = accountCollection.updateOne(filterDestination,   updateOperationAddManipulation2 );
-        UpdateResult updateResult4 = accountCollection.updateOne(filterDestination,  updateOperationDestination );
+        UpdateResult updateResult3 = accountCollection.updateOne(filterDestination, updateOperationAddManipulation2);
+        UpdateResult updateResult4 = accountCollection.updateOne(filterDestination, updateOperationDestination);
 
         return true;
-
     }
 
     public Account updateSumsCreateTransactionReturnAccount(int sourceAccountId, int destinationAccountId, int sum) {
@@ -79,31 +77,29 @@ public class OnlineTransactionDao {
             String mongoDate = onlineTransaction.getTimeasString();
 
             // update sums
-            int newBalanceSource =  sourceAccount.getBalance() - sum;
+            int newBalanceSource = sourceAccount.getBalance() - sum;
             int newBalanceDestination = destinationAccount.getBalance() + sum;
             sourceAccount.setBalance(newBalanceSource);
             destinationAccount.setBalance(newBalanceDestination);
 
 
-            if(            this.synchronizationMongoTransaction(
+            if (this.synchronizationMongoTransaction(
                     newTransactionId,
                     sourceAccountId,
                     destinationAccountId,
                     sum,
                     newBalanceSource,
                     newBalanceDestination,
-                    mongoDate)){
+                    mongoDate)) {
 
-                Send s = new Send(newTransactionId, sum,sourceAccountId,destinationAccountId );
+                Send s = new Send(newTransactionId, sum, sourceAccountId, destinationAccountId);
                 NeoDao.createTransaction(s);
                 transaction.commit();
             }
-;
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-
         }
         return sourceAccount;
     }
@@ -113,8 +109,8 @@ public class OnlineTransactionDao {
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            Account account = session.get(Account.class, id );
-            if (account != null ) {
+            Account account = session.get(Account.class, id);
+            if (account != null) {
                 return true;
             }
             transaction.commit();
@@ -126,13 +122,14 @@ public class OnlineTransactionDao {
         }
         return false;
     }
+
     public Account getAccount(int id) {
         Transaction transaction = null;
         User user = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            Account account = session.get(Account.class, id );
-            if (account != null ) {
+            Account account = session.get(Account.class, id);
+            if (account != null) {
                 return account;
             }
             transaction.commit();

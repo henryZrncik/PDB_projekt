@@ -23,6 +23,7 @@ public class UserDao {
             e.printStackTrace();
         }
     }
+
     public boolean validate(int id) {
 
         Transaction transaction = null;
@@ -31,14 +32,9 @@ public class UserDao {
             // start a transaction
             transaction = session.beginTransaction();
             // get an user object
-//            user = (User) session.createQuery("FROM User U WHERE U.username = :username").setParameter("username", username)
-//                    .uniqueResult();
-            user = session.get(User.class, id );
+            user = session.get(User.class, id);
 
-//            if (user != null && user.getPassword().equals(password)) {
-//                return true;
-//            }
-            if (user != null ) {
+            if (user != null) {
                 return true;
             }
             // commit transaction

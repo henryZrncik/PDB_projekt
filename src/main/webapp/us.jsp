@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Us</title>
+    <title>TOP$</title>
 </head>
 <%@ include file="shared/navigationLoggedOf.jsp"%>
 <body>

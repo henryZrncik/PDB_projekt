@@ -1,14 +1,10 @@
 package servlet;
 
-import com.mongodb.client.AggregateIterable;
 import dao.AccountDao;
-import dao.ManipulationDao;
 import dao.OnlineTransactionDao;
 import domain.Account;
-import domain.Manipulation;
 import org.bson.Document;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,13 +17,13 @@ import java.util.List;
 public class Transaction extends HttpServlet {
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         HttpSession session = request.getSession();
 
         // get destination id , sum
-        int destinationAccountId =Integer.parseInt(request.getParameter("destinationAccountId"));
-        int sumToSend =Integer.parseInt(request.getParameter("sum"));
+        int destinationAccountId = Integer.parseInt(request.getParameter("destinationAccountId"));
+        int sumToSend = Integer.parseInt(request.getParameter("sum"));
 
         //get sourceId , using account from session
         Account sourceAccount = (Account) session.getAttribute("account");
@@ -35,14 +31,14 @@ public class Transaction extends HttpServlet {
 
 
         // Do i have enough founds
-        if(sumToSend > sourceAccount.getBalance()){
+        if (sumToSend > sourceAccount.getBalance()) {
             session.setAttribute("problem", "not enough funds on account to finish called transaction");
             response.sendRedirect("display.jsp");
             return;
         }
 
         // Does destiantion address exist, and is it different from sending id
-        if (!isDestinationAccountValid( sourceAccountId ,destinationAccountId)){
+        if (!isDestinationAccountValid(sourceAccountId, destinationAccountId)) {
             session.setAttribute("problem", "wrong destination account address");
             response.sendRedirect("display.jsp");
             return;
@@ -54,7 +50,7 @@ public class Transaction extends HttpServlet {
         Account accUpdated = onlineTransactionDao.updateSumsCreateTransactionReturnAccount(
                 sourceAccountId,
                 destinationAccountId,
-                sumToSend );
+                sumToSend);
 
         session.setAttribute("account", accUpdated);
         Document accountMongo = AccountDao.getAccountMongo(sourceAccountId);
@@ -62,31 +58,13 @@ public class Transaction extends HttpServlet {
 
         List<Document> trends = AccountDao.queryAggregateTrends(sourceAccountId);
         session.setAttribute("trendsMongo", trends);
-//        response.sendRedirect("manipulations.jsp");
         response.sendRedirect("Manipulations");
-
-
-
-//        System.out.println(destinationAccountId);
-//        System.out.println(sumToSend);
-
-//        ManipulationDao manipulationDao = new ManipulationDao();
-//        HttpSession session = request.getSession();
-//        Account account =(Account) session.getAttribute("account");
-//        int accountId = account.getId();
-//
-//        List<Manipulation> manipulations = manipulationDao.getManipulationsOfAccount(accountId);
-//        session.setAttribute("manipulations", manipulations);
-//        response.sendRedirect("manipulations.jsp");
-
     }
-    public boolean isDestinationAccountValid(int sourceId, int destinationAccountId){
+
+    public boolean isDestinationAccountValid(int sourceId, int destinationAccountId) {
         AccountDao accountDao = new AccountDao();
         boolean destinationExist = accountDao.validate(destinationAccountId);
-        if(destinationExist && (sourceId != destinationAccountId)){
-            return true;
-        }
-        return  false;
+        return destinationExist && (sourceId != destinationAccountId);
     }
 
 }
