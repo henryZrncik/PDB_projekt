@@ -226,6 +226,7 @@
           <element id="library" level="project" name="Maven: org.mongodb:mongodb-driver-sync:3.11.2" />
           <element id="library" level="project" name="Maven: org.mongodb:bson:3.11.2" />
           <element id="library" level="project" name="Maven: org.mongodb:mongodb-driver-core:3.11.2" />
+          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.8.6" />
         </element>
       </element>
       <element id="directory" name="META-INF">

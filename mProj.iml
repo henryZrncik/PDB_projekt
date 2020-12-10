@@ -266,5 +266,6 @@
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-sync:3.11.2" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:bson:3.11.2" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:3.11.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
   </component>
 </module>
