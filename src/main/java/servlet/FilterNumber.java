@@ -23,12 +23,9 @@ public class FilterNumber implements Filter {
         if (num1 > 1){
             chain.doFilter(req, resp);
         }
-
-
-
     }
 
-    public void init(FilterConfig config) throws ServletException {
+    public void init(FilterConfig config) {
 
     }
 

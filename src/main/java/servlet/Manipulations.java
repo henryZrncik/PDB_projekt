@@ -20,24 +20,21 @@ import java.util.List;
 @WebServlet("/Manipulations")
 public class Manipulations extends HttpServlet implements Comparator<Manipulation> {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.printf("Manipulations called scriptlet");
 
         ManipulationDao manipulationDao = new ManipulationDao();
         HttpSession session = request.getSession();
-        Account account =(Account) session.getAttribute("account");
+        Account account = (Account) session.getAttribute("account");
         int accountId = account.getId();
 
         List<Manipulation> manipulations = manipulationDao.getManipulationsOfAccount(accountId);
-        System.out.println("before");
-        for (Manipulation m : manipulations){
-            System.out.println(m.getId());
-        }
+//        for (Manipulation m : manipulations) {
+//            System.out.println(m.getId());
+//        }
 
         Collections.sort(manipulations, this::compare);
-        System.out.println("after");
-        for (Manipulation m : manipulations){
-            System.out.println(m.getId());
-        }
+//        for (Manipulation m : manipulations) {
+//            System.out.println(m.getId());
+//        }
 
         Document accountMongo = AccountDao.getAccountMongo(accountId);
         session.setAttribute("manipulations", manipulations);
@@ -45,12 +42,10 @@ public class Manipulations extends HttpServlet implements Comparator<Manipulatio
         response.sendRedirect("manipulations.jsp");
 
 
-
     }
 
     @Override
     public int compare(Manipulation o1, Manipulation o2) {
-        System.out.println("sort called ");
         return o1.getId() > o2.getId() ? -1 : 1;
     }
 }

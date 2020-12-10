@@ -16,7 +16,7 @@ public class MongoUtil {
     public static MongoClient getMongoClient() {
         if (mongoClient == null) {
             try {
-                MongoClient mongoClient = MongoClients.create(connectionStr);
+                mongoClient = MongoClients.create(connectionStr);
                 return mongoClient;
             } catch (Exception e) {
                 return null;
