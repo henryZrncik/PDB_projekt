@@ -50,13 +50,16 @@ import java.util.List;
 
 
             for (Document d : accountManipulations){
+                System.out.println("for");
                 if( (boolean) d.get("isTransaction")){
-                    int sum = d.getInteger("total", 0);
+                    System.out.println("if");
+                    int sum = d.getInteger("sum");
                     int destinationAccount = d.getInteger("destinationAccountId", 0);
+                    int source = d.getInteger("sourceAccountId", 0);
                     String date = d.getString("date");
                     int transactionId = d.getInteger("transactionId");
                     boolean isIN = d.getBoolean("isIN");
-                    transactions.add(new Transaction(transactionId,sum, destinationAccount,date,isIN ));
+                    transactions.add(new Transaction(transactionId,sum, destinationAccount,date,isIN, source ));
                 }
             }
 

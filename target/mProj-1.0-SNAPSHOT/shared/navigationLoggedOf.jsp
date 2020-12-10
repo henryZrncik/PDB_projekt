@@ -14,7 +14,6 @@
     <div class="navbar-collapse">
         <ul class="nav navbar-nav">
             <li class="active"><a href="track.jsp">T-Tracking</a></li>
-            <li class="active"><a href="us.jsp">About us</a></li>
             <li class="active"><a href="us.jsp">Contact</a></li>
 
             <li class="active"><a href="index.jsp">Login</a></li>
