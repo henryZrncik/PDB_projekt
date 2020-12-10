@@ -20,21 +20,21 @@ import java.util.List;
 
 @WebServlet("/accTrend")
 public class AccTrendS extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int accountId =Integer.parseInt(request.getParameter("id"));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int accountId = Integer.parseInt(request.getParameter("id"));
         System.out.println("API: Get/accTrend : param id: " + accountId);
-        boolean isGoodAcc =  AccountDao.validate(accountId);
+        boolean isGoodAcc = AccountDao.validate(accountId);
 
         Gson gson = new Gson();
         PrintWriter printWriter = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        if (! isGoodAcc){
+        if (!isGoodAcc) {
             Response response1 = new Response("wrong");
             String accJson = gson.toJson(response1);
             printWriter.write(accJson);
@@ -45,7 +45,7 @@ public class AccTrendS extends HttpServlet {
         List<Trends> trends = new LinkedList<>();
 
 
-        for (Document d : accountMongo){
+        for (Document d : accountMongo) {
             int id = d.getInteger("_id", 0);
             int totalSum = d.getInteger("total", 0);
             trends.add(new Trends(id, totalSum));
@@ -54,7 +54,6 @@ public class AccTrendS extends HttpServlet {
         String accJson = gson.toJson(trends);
         printWriter.write(accJson);
         printWriter.close();
-
 
 
     }

@@ -25,7 +25,7 @@ import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Aggregates.unwind;
 
 public class AccountDao {
-    public void saveAccount(Account account) {
+    public static void saveAccount(Account account) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();

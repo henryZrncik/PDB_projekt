@@ -29,23 +29,23 @@ import java.util.List;
 
 @WebServlet("/accAccSumTransaction")
 public class AccAccSumTransactionP extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int accountId1 =Integer.parseInt(request.getParameter("from"));
-        int accountId2 =Integer.parseInt(request.getParameter("to"));
-        int sum =Integer.parseInt(request.getParameter("sum"));
-        boolean isGoodAcc1 =  AccountDao.validate(accountId1);
-        boolean isGoodAcc2 =  AccountDao.validate(accountId2);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int accountId1 = Integer.parseInt(request.getParameter("from"));
+        int accountId2 = Integer.parseInt(request.getParameter("to"));
+        int sum = Integer.parseInt(request.getParameter("sum"));
+        boolean isGoodAcc1 = AccountDao.validate(accountId1);
+        boolean isGoodAcc2 = AccountDao.validate(accountId2);
 
         Gson gson = new Gson();
         PrintWriter printWriter = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        if (! isGoodAcc1){
+        if (!isGoodAcc1) {
             Response response1 = new Response("wrong");
             String accJson = gson.toJson(response1);
             printWriter.write(accJson);
@@ -53,7 +53,7 @@ public class AccAccSumTransactionP extends HttpServlet {
             return;
         }
 
-        if (! isGoodAcc2){
+        if (!isGoodAcc2) {
             Response response1 = new Response("wrong");
             String accJson = gson.toJson(response1);
             printWriter.write(accJson);
@@ -61,14 +61,13 @@ public class AccAccSumTransactionP extends HttpServlet {
             return;
         }
         OnlineTransactionDao onlineTransactionDao = new OnlineTransactionDao();
-        Account acc = onlineTransactionDao.updateSumsCreateTransactionReturnAccount(accountId1,accountId2,sum);
+        Account acc = onlineTransactionDao.updateSumsCreateTransactionReturnAccount(accountId1, accountId2, sum);
 
 
         Response response1 = new Response("good");
         String accJson = gson.toJson(response1);
         printWriter.write(accJson);
         printWriter.close();
-
 
 
     }

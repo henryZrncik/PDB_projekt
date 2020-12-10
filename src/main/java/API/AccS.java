@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 
 public class AccS extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int accountId =Integer.parseInt(request.getParameter("id"));
         System.out.println("API: Get/acc : param id: " + accountId);
         boolean isGoodAcc =  AccountDao.validate(accountId);
@@ -47,8 +47,5 @@ public class AccS extends HttpServlet {
         String accJson = gson.toJson(a);
         printWriter.write(accJson);
         printWriter.close();
-
-
-
     }
 }

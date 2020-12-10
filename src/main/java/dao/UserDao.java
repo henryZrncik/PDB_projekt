@@ -7,7 +7,7 @@ import org.hibernate.Transaction;
 import utilities.HibernateUtil;
 
 public class UserDao {
-    public void saveUser(User user) {
+    public static void saveUser(User user) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
