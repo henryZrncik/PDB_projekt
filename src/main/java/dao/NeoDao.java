@@ -11,20 +11,6 @@ import utilities.Neo4JUtility;
 import static org.neo4j.driver.Values.parameters;
 
 public class NeoDao {
-    public static void insertAccount(final String message) {
-        try (Session session = Neo4JUtility.getDriver().session()) {
-            String greeting = session.writeTransaction(new TransactionWork<String>() {
-                @Override
-                public String execute(Transaction tx) {
-                    Result result = tx.run("CREATE (a:Greeting {message: $message}) " +
-                                    "RETURN a.message + ', from node ' + id(a)",
-                            parameters("message", message));
-                    return result.single().get(0).asString();
-                }
-            });
-            System.out.println(greeting);
-        }
-    }
 
     public static void createAccount(final Account account) {
         try (Session session = Neo4JUtility.getDriver().session()) {
@@ -99,6 +85,45 @@ public class NeoDao {
                             parameters(
                                     "sourceId", sourceId,
                                     "destinationId", destinationId
+                            ));
+                    if (result.hasNext()) {
+                        return result.single().get(0).asInt();
+                    }
+                    return 0;
+                }
+            });
+            return (int) greeting;
+        }
+    }
+
+
+    public static int accountConnections(int sourceId) {
+        try (Session session = Neo4JUtility.getDriver().session()) {
+            Object greeting = session.writeTransaction(new TransactionWork<Object>() {
+                @Override
+                public Object execute(Transaction tx) {
+                    Result result = tx.run("match(a:Account) where a.accountId = $sourceId return size((a)-->())",
+                            parameters(
+                                    "sourceId", sourceId
+                            ));
+                    if (result.hasNext()) {
+                        return result.single().get(0).asInt();
+                    }
+                    return 0;
+                }
+            });
+            return (int) greeting;
+        }
+    }
+
+    public static int neighborConnections(int sourceId) {
+        try (Session session = Neo4JUtility.getDriver().session()) {
+            Object greeting = session.writeTransaction(new TransactionWork<Object>() {
+                @Override
+                public Object execute(Transaction tx) {
+                    Result result = tx.run("match (a:Account)-->(b:Account) where a.accountId = $sourceId return count(DISTINCT b.accountId)",
+                            parameters(
+                                    "sourceId", sourceId
                             ));
                     if (result.hasNext()) {
                         return result.single().get(0).asInt();

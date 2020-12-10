@@ -3,6 +3,7 @@ package API;
 import APIdomain.Response;
 import com.google.gson.Gson;
 import dao.AccountDao;
+import dao.NeoDao;
 import dao.UserDao;
 import domain.Account;
 import domain.City;
@@ -36,6 +37,13 @@ public class AccCreate extends HttpServlet {
 
         UserDao.saveUser(u);
         AccountDao.saveAccount(a);
+
+        domain.neo.Account neoa = new domain.neo.Account();
+        neoa.setAccountId(a.getId());
+        neoa.setOwnerFirstName(first);
+        neoa.setOwnerSecondName(last);
+        neoa.setOwnerIsFrom("New York");
+        NeoDao.createAccount(neoa);
 
         Gson gson = new Gson();
         PrintWriter printWriter = response.getWriter();
