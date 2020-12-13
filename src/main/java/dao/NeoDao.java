@@ -102,7 +102,7 @@ public class NeoDao {
             Object greeting = session.writeTransaction(new TransactionWork<Object>() {
                 @Override
                 public Object execute(Transaction tx) {
-                    Result result = tx.run("match(a:Account) where a.accountId = $sourceId return size((a)-->())",
+                    Result result = tx.run("match(a:Account) where a.accountId = $sourceId return size((a)-->()) + size(()-->(a))",
                             parameters(
                                     "sourceId", sourceId
                             ));
@@ -121,7 +121,7 @@ public class NeoDao {
             Object greeting = session.writeTransaction(new TransactionWork<Object>() {
                 @Override
                 public Object execute(Transaction tx) {
-                    Result result = tx.run("match (a:Account)-->(b:Account) where a.accountId = $sourceId return count(DISTINCT b.accountId)",
+                    Result result = tx.run("match (a:Account)--(b:Account) where a.accountId = $sourceId return count(DISTINCT b.accountId)",
                             parameters(
                                     "sourceId", sourceId
                             ));
