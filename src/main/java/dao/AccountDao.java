@@ -1,15 +1,20 @@
 package dao;
 
+import com.google.gson.Gson;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.result.UpdateResult;
 import domain.Account;
 import domain.OnlineTransaction;
 import domain.User;
+import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.conversions.Bson;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import utilities.HibernateUtil;
@@ -23,6 +28,9 @@ import static com.mongodb.client.model.Aggregates.group;
 import static com.mongodb.client.model.Aggregates.match;
 import static com.mongodb.client.model.Aggregates.project;
 import static com.mongodb.client.model.Aggregates.unwind;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.push;
+import static com.mongodb.client.model.Updates.set;
 
 public class AccountDao {
     public static void saveAccount(Account account) {
@@ -37,6 +45,30 @@ public class AccountDao {
             }
             e.printStackTrace();
         }
+
+
+
+
+
+
+        MongoClient mongoClient = MongoUtil.getMongoClient();
+
+        Document owner = new Document("ownerId", account.getOwner().getId())
+                .append("ownerFirstName", account.getOwner().getFirstName())
+                .append("ownerLastName", account.getOwner().getLastName())
+                .append("isFromCity", account.getOwner().getFromCity().getName());
+
+        Document acc = new Document("accountId", account.getId())
+                .append("owner", owner)
+                .append("balance", account.getBalance())
+                .append("AccountManipulations", null);
+
+        Gson g = new Gson();
+        String gacc = g.toJson(acc);
+
+        MongoCollection accountCollection = mongoClient.getDatabase("db1").getCollection("Accounts");
+        // SOURCE / OUT updated sum and add new transaction
+        accountCollection.insertOne(acc);
     }
 
     public static Account updateSumReturnAccount(int id, int sum) {

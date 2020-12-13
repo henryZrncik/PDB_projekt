@@ -43,7 +43,7 @@ public class AccS extends HttpServlet {
         String lastName = owner.getString("ownerLastName");
         int balance = accountMongo.getInteger("balance",0);
 
-        Acc a = new Acc(name, lastName, balance);
+        Acc a = new Acc(name, lastName, balance, accountId);
         String accJson = gson.toJson(a);
         printWriter.write(accJson);
         printWriter.close();

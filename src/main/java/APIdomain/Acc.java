@@ -1,14 +1,16 @@
 package APIdomain;
 
 public class Acc {
+    private int Id;
     private String ownerName;
     private String ownerLastName;
     private int balance;
 
-    public Acc(String ownerName, String ownerLastName, int balance) {
+    public Acc(String ownerName, String ownerLastName, int balance, int id) {
         this.ownerName = ownerName;
         this.ownerLastName = ownerLastName;
         this.balance = balance;
+        this.Id = id;
     }
 
     @Override

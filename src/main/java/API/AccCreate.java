@@ -1,5 +1,6 @@
 package API;
 
+import APIdomain.Acc;
 import APIdomain.Response;
 import com.google.gson.Gson;
 import dao.AccountDao;
@@ -50,8 +51,10 @@ public class AccCreate extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
+        Acc acc = new Acc(first, last, balance, a.getId());
+
         Response response1 = new Response("good");
-        String accJson = gson.toJson(response1);
+        String accJson = gson.toJson(acc);
         printWriter.write(accJson);
         printWriter.close();
     }
