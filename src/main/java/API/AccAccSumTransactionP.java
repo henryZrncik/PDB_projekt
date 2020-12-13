@@ -60,6 +60,17 @@ public class AccAccSumTransactionP extends HttpServlet {
             printWriter.close();
             return;
         }
+
+        Account account = AccountDao.getAccount(accountId1);
+        if (sum > account.getBalance()) {
+            Response response1 = new Response("wrong");
+            String accJson = gson.toJson(response1);
+            printWriter.write(accJson);
+            printWriter.close();
+            return;
+        }
+
+
         OnlineTransactionDao onlineTransactionDao = new OnlineTransactionDao();
         Account acc = onlineTransactionDao.updateSumsCreateTransactionReturnAccount(accountId1, accountId2, sum);
 

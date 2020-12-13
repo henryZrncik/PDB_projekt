@@ -8,6 +8,7 @@ import APIdomain.Trends;
 import com.google.gson.Gson;
 import dao.AccountDao;
 import dao.ManipulationDao;
+import domain.Account;
 import org.bson.Document;
 
 import javax.print.Doc;
@@ -26,6 +27,7 @@ public class AccTransactionS extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int accountId = Integer.parseInt(request.getParameter("id"));
         System.out.println("API: Get/accTransaction : param id: " + accountId);
+
         boolean isGoodAcc = AccountDao.validate(accountId);
 
         Gson gson = new Gson();
@@ -40,6 +42,8 @@ public class AccTransactionS extends HttpServlet {
             printWriter.close();
             return;
         }
+
+
         Document accountMongo = AccountDao.getAccountMongo(accountId);
         List<Document> accountManipulations = (List<Document>) accountMongo.get("accountManipulations");
         List<Transaction> transactions = new LinkedList<>();
